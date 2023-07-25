@@ -47,29 +47,36 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso:\n" + createdUser.toString());
     }
 
-    // Endpoint PUT para atualizar um usuário existente pelo Login
+    //endpoint para atualizar
     @PutMapping("/{login}")
     public ResponseEntity<String> updateUser(@PathVariable String login, @RequestParam String perfil, @RequestParam String senha) {
-        for (User user : userList) {
-            if (user.getLogin().equals(login)) {
-                user.setPerfil(perfil);
-                user.setSenha(senha);
-                return ResponseEntity.ok("Usuário atualizado com sucesso:\n" + user.toString());
-            }
+        Optional<User> optionalUser = userRepository.findByLogin(login);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPerfil(perfil);
+            user.setSenha(senha);
+            user.setLogin(login);
+            userRepository.save(user); // Salvando as alterações no banco de dados
+            return ResponseEntity.ok("Usuário atualizado com sucesso:\n" + user.toString());
         }
+
         return ResponseEntity.notFound().build();
     }
 
     // Endpoint DELETE para deletar um usuário existente pelo Login
     @DeleteMapping("/{login}")
     public ResponseEntity<String> deleteUser(@PathVariable String login) {
-        for (User user : userList) {
-            if (user.getLogin().equals(login)) {
-                userList.remove(user);
-                return ResponseEntity.ok("Usuário deletado com sucesso:\n" + user.toString());
-            }
+        Optional<User> optionalUser = userRepository.findByLogin(login);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            userRepository.delete(user);
+            return ResponseEntity.ok("Usuário deletado com sucesso:\n" + user.toString());
         }
+
         return ResponseEntity.notFound().build();
     }
+
 }
 
