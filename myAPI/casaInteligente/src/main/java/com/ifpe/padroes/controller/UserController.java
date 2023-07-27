@@ -42,6 +42,7 @@ public class UserController {
     // Endpoint POST para criar um novo usuário
     @PostMapping
     public ResponseEntity<String> createUser(@RequestParam String login, @RequestParam String perfil, @RequestParam String senha) {
+        //hash(senha)
         User newUser = userFactory.createUser(login, perfil, senha);
         User createdUser = userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso:\n" + createdUser.toString());
@@ -49,14 +50,14 @@ public class UserController {
 
     //endpoint para atualizar
     @PutMapping("/{login}")
-    public ResponseEntity<String> updateUser(@PathVariable String login, @RequestParam String perfil, @RequestParam String senha) {
+    public ResponseEntity<String> updateUser(@PathVariable String login,  @RequestParam String novoLogin, @RequestParam String perfil, @RequestParam String senha) {
         Optional<User> optionalUser = userRepository.findByLogin(login);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setPerfil(perfil);
             user.setSenha(senha);
-            user.setLogin(login);
+            user.setLogin(novoLogin);
             userRepository.save(user); // Salvando as alterações no banco de dados
             return ResponseEntity.ok("Usuário atualizado com sucesso:\n" + user.toString());
         }

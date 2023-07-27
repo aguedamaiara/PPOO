@@ -42,7 +42,6 @@ public class SensorController {
         if (optionalUser.isPresent()) {
             User autor = optionalUser.get();
             Sensor newSensor = new Sensor(nome, valor, estado, tipo, autor);
-            sensorList.add(newSensor); // Simulação em memória
             sensorRepository.save(newSensor); // Persistir no banco de dados
             return ResponseEntity.status(HttpStatus.CREATED).body("Sensor criado com sucesso:\n" + newSensor.toString());
         } else {
