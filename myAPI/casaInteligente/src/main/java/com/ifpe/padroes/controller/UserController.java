@@ -4,15 +4,11 @@ import com.ifpe.padroes.model.User;
 import com.ifpe.padroes.repository.UserRepository;
 import com.ifpe.padroes.factory.UserFactory;
 import org.springframework.stereotype.Component;
-//import com.ifpe.padroes.dtos.UserRecordDto;
-import jakarta.validation.Valid;
-
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +39,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> createUser(@RequestParam String login, @RequestParam String perfil, @RequestParam String senha) {
         //hash(senha)
-        User newUser = userFactory.createUser(login, perfil, senha);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedSenha = passwordEncoder.encode(senha);
+
+        User newUser = userFactory.createUser(login, perfil, hashedSenha);
         User createdUser = userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso:\n" + createdUser.toString());
     }
