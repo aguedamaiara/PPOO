@@ -1,7 +1,5 @@
 # PPOO
 
-Projeto da disciplina de Padrões de Projeto de Software Orientado a Objetos
-
 ### Casa Inteligente
 
 Este projeto foi desenvolvido como parte da segunda unidade do curso, permitindo a prática dos elementos estudados na primeira unidade e integrando novos assuntos da segunda unidade. O objetivo é criar um sistema para uma Casa Inteligente, utilizando padrões de projeto e princípios de programação.
